@@ -1,0 +1,15 @@
+{
+  "name": "@printshop/api",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@printshop/shared": "0.1.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  }
+}

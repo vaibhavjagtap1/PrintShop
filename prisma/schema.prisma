@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Shop {
+  id                  String   @id @default(cuid())
+  name                String
+  address             String
+  phone               String
+  gstin               String?
+  upiVpa              String
+  maxPagesPerOrder    Int      @default(100)
+  pricingJson         Json
+  isOpen              Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  orders              Order[]
+  printers            Printer[]
+}
+
+model Printer {
+  id             String   @id @default(cuid())
+  shopId         String
+  name           String
+  model          String
+  supportsColor  Boolean  @default(false)
+  supportsDuplex Boolean  @default(false)
+  status         String
+  queueLength    Int      @default(0)
+  isEnabled      Boolean  @default(true)
+  lastSeenAt     DateTime?
+  shop           Shop     @relation(fields: [shopId], references: [id])
+  orders         Order[]
+}
+
+model Order {
+  id             String   @id @default(cuid())
+  orderCode      String   @unique
+  shopId         String
+  printerId      String?
+  customerName   String
+  customerPhone  String
+  status         String
+  totalPages     Int
+  totalAmount    Decimal  @db.Decimal(10, 2)
+  currency       String   @default("INR")
+  createdAt      DateTime @default(now())
+  paidAt         DateTime?
+  shop           Shop     @relation(fields: [shopId], references: [id])
+  printer        Printer? @relation(fields: [printerId], references: [id])
+  payments       Payment[]
+}
+
+model Payment {
+  id                String   @id @default(cuid())
+  orderId           String
+  gatewayOrderId    String
+  gatewayPaymentId  String?
+  method            String   @default("upi")
+  amount            Decimal  @db.Decimal(10, 2)
+  currency          String   @default("INR")
+  status            String
+  signatureVerified Boolean  @default(false)
+  rawPayload        Json?
+  createdAt         DateTime @default(now())
+  capturedAt        DateTime?
+  order             Order    @relation(fields: [orderId], references: [id])
+
+  @@index([gatewayOrderId])
+}
