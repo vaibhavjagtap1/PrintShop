@@ -1,0 +1,26 @@
+{
+  "name": "printshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test -w @printshop/shared && npm run test -w @printshop/api"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/vaibhavjagtap1/PrintShop"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.1"
+  }
+}
